@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat with PDF</title>
+</head>
+
+<body>
+    <h2>Ask PDF a Question</h2>
+    <form id="chatForm">
+        <input type="text" id="filename" placeholder="Enter uploaded PDF filename" /><br><br>
+        <input type="text" id="question" placeholder="Enter your question" size="60" /><br><br>
+        <button type="submit">Ask</button>
+    </form>
+    <p id="answer"></p>
+
+    <script>
+        const form = document.getElementById("chatForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const filename = document.getElementById("filename").value;
+            const question = document.getElementById("question").value;
+            if (!filename || !question) return alert("Fill both fields!");
+
+            const formData = new FormData();
+            formData.append("question", question);
+
+            const response = await fetch(`/chat/${filename}`, {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById("answer").innerText = data.answer;
+        });
+    </script>
+</body>
+
+</html>

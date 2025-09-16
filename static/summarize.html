@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Summarize PDF</title>
+</head>
+
+<body>
+    <h2>Summarize PDF</h2>
+    <form id="summarizeForm">
+        <input type="text" id="filename" placeholder="Enter uploaded PDF filename" />
+        <button type="submit">Summarize</button>
+    </form>
+    <p id="summary"></p>
+
+    <script>
+        const form = document.getElementById("summarizeForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const filename = document.getElementById("filename").value;
+            if (!filename) return alert("Enter the filename!");
+
+            const response = await fetch(`/summarize/${filename}`, {
+                method: "POST"
+            });
+            const data = await response.json();
+            document.getElementById("summary").innerText = data.summary;
+        });
+    </script>
+</body>
+
+</html>

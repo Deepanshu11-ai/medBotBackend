@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload PDF</title>
+</head>
+
+<body>
+    <h2>Upload a PDF</h2>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" name="file" />
+        <button type="submit">Upload</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        const form = document.getElementById("uploadForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+            if (!file) return alert("Select a file first!");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+
+</html>

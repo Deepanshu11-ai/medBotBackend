@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>📑 Medical Bot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <h1>📑 Medical Bot</h1>
+
+    <!-- Upload -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div style="margin-bottom: 10px;">
+            <input type="file" name="file" accept=".pdf,.docx,.txt" required>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <input type="text" name="user_location" placeholder="Enter your location to find nearby hospitals"
+                style="width: 300px;">
+        </div>
+        <button type="submit">Upload Document</button>
+    </form>
+
+    <!-- Summary -->
+    {% if summary %}
+    <div class="summary-box">
+        <h3>Medical Report Analysis</h3>
+        <p><strong>� Critical Findings & Red Flags:</strong><br>
+            {% for flag in summary.red_flags %}
+            {{ flag }}<br>
+            {% endfor %}
+        </p>
+        <p><strong>🔍 Key Findings:</strong><br>
+            {% for finding in summary.key_findings %}
+            {{ finding }}<br>
+            {% endfor %}
+        </p>
+        <p><strong>⚖️ Risk Assessment:</strong><br>
+            {% for risk in summary.risk_stratification %}
+            {{ risk }}<br>
+            {% endfor %}
+        </p>
+        <p><strong>� Recommendations:</strong><br>
+            {% for rec in summary.recommendations %}
+            {{ rec }}<br>
+            {% endfor %}
+        </p>
+        <p><strong>📝 Additional Notes:</strong><br>
+            {% for note in summary.validation_notes %}
+            {{ note }}<br>
+            {% endfor %}
+        </p>
+
+        <h3>📊 Analysis Confidence Metrics</h3>
+        <div class="metrics-grid">
+            <div class="chart-container">
+                <canvas id="diagnosticConfidence"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="riskDistribution"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="abnormalIndicators"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="measurementAccuracy"></canvas>
+            </div>
+        </div>
+
+        <script>
+            // Diagnostic Confidence Gauge
+            new Chart(document.getElementById('diagnosticConfidence'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Confidence', 'Uncertainty'],
+                    datasets: [{
+                        data: [
+                            {{ summary.confidence_metrics.diagnostic_confidence }},
+                    {{ 100 - summary.confidence_metrics.diagnostic_confidence }}
+                        ],
+                backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(169, 169, 169, 0.2)']
+            }]
+                },
+                options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Diagnostic Confidence Level'
+                    }
+                }
+            }
+            });
+
+            // Risk Distribution
+            new Chart(document.getElementById('riskDistribution'), {
+                type: 'bar',
+                data: {
+                    labels: {{ summary.confidence_metrics.risk_levels | map(attribute = "level") | list | tojson | safe }},
+                datasets: [{
+                    label: 'Risk Distribution',
+                    data: {{ summary.confidence_metrics.risk_levels | map(attribute = "count") | list | tojson | safe }},
+                backgroundColor: {{ summary.confidence_metrics.risk_levels | map(attribute = "color") | list | tojson | safe }}
+                    }]
+                },
+                options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Risk Level Distribution'
+                    }
+                }
+            }
+            });
+
+            // Abnormal Indicators
+            new Chart(document.getElementById('abnormalIndicators'), {
+                type: 'pie',
+                data: {
+                    labels: {{ summary.confidence_metrics.abnormal_indicators | map(attribute = "label") | list | tojson | safe }},
+                datasets: [{
+                    data: {{ summary.confidence_metrics.abnormal_indicators | map(attribute = "value") | list | tojson | safe }},
+                backgroundColor: {{ summary.confidence_metrics.abnormal_indicators | map(attribute = "color") | list | tojson | safe }}
+                    }]
+                },
+                options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Distribution of Findings'
+                    }
+                }
+            }
+            });
+
+            // Measurement Accuracy
+            new Chart(document.getElementById('measurementAccuracy'), {
+                type: 'radar',
+                data: {
+                    labels: {{ summary.confidence_metrics.measurement_accuracy | map(attribute = "parameter") | list | tojson | safe }},
+                datasets: [{
+                    label: 'Measurement Confidence',
+                    data: {{ summary.confidence_metrics.measurement_accuracy | map(attribute = "confidence") | list | tojson | safe }},
+                fill: true,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
+                    }]
+                },
+                options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Measurement Accuracy Levels'
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+            });
+        </script>
+
+        <div class="location-form">
+            <h4>🏥 Find Nearby Hospitals</h4>
+            <div class="search-box">
+                <input type="text" id="locationInput" placeholder="Enter your location" style="width: 300px;"
+                    value="{{ user_location if user_location else '' }}">
+                <button onclick="searchHospitals()" style="margin-left: 10px;">Search Nearby Hospitals</button>
+            </div>
+            <script>
+                function searchHospitals() {
+                    const location = document.getElementById('locationInput').value;
+                    if (location) {
+                        // Create Google Maps search URL for hospitals near the location
+                        const searchQuery = encodeURIComponent('hospitals near ' + location);
+                        const mapsUrl = `https://www.google.com/maps/search/${searchQuery}`;
+                        // Open in a new tab
+                        window.open(mapsUrl, '_blank');
+                    } else {
+                        alert('Please enter a location');
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Hospital search is now handled through Google Maps directly -->
+    {% endif %}
+
+    <!-- Medical Advice Section -->
+    <div class="advice-box" id="advice-container">
+        <h3>🩺 Get Medical Advice</h3>
+        <p class="advice-description">Get personalized medical advice based on your report analysis. Ask specific
+            questions about your health concerns, lifestyle recommendations, or clarification about your test results.
+        </p>
+        <div class="advice-form">
+            <textarea id="advice-query"
+                placeholder="What would you like to know? (e.g., 'What lifestyle changes would you recommend based on these results?', 'Should I be concerned about any specific findings?')"
+                rows="3"></textarea>
+            <button onclick="getAdvice()" class="primary-button">Get Advice</button>
+        </div>
+        <div id="advice-result" class="advice-result" style="display: none;">
+            <h4>Medical Advice</h4>
+            <div id="advice-content"></div>
+        </div>
+    </div>
+
+    <!-- Chat -->
+    <h2>💬 Chat with Medical Bot</h2>
+    <div class="chat-container">
+        {% if chat %}
+        {% for msg in chat %}
+        {% if msg.role == 'user' %}
+        <div class="message user-message">
+            <div class="sender">You:</div>
+            {{ msg.content }}
+        </div>
+        {% else %}
+        <div class="message bot-message">
+            <div class="sender">Bot:</div>
+            {{ msg.content }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <p style="text-align: center; color: #666;">No chat history yet. Start by asking a question about the document!
+        </p>
+        {% endif %}
+    </div>
+
+    <form action="/chat" method="post">
+        <input type="text" name="user_input" placeholder="Ask about the medical report..." required>
+        <button type="submit">Send Message</button>
+    </form>
+
+    <script>
+        function getAdvice() {
+            const query = document.getElementById('advice-query').value.trim();
+            if (!query) {
+                alert('Please enter your question');
+                return;
+            }
+
+            // Show loading state
+            const adviceResult = document.getElementById('advice-result');
+            const adviceContent = document.getElementById('advice-content');
+            adviceContent.innerHTML = '<div class="loading">Getting medical advice...</div>';
+            adviceResult.style.display = 'block';
+
+            // Send request to backend
+            fetch('/get_advice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'query': query
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        adviceContent.innerHTML = data.advice.replace(/\\n/g, '<br>');
+                    } else {
+                        adviceContent.innerHTML = `<div style="color: #dc3545;">Error: ${data.error || 'Failed to get advice'}</div>`;
+                    }
+                })
+                .catch(error => {
+                    adviceContent.innerHTML = '<div style="color: #dc3545;">Error: Failed to connect to the server</div>';
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

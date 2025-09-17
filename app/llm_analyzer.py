@@ -42,7 +42,7 @@ def analyze_medical_report(text: str) -> Dict[str, Any]:
     """
     try:
         API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
-        API_URL = "https://openrouter.ai/api/v1"
+        API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
             "Authorization": f"Bearer {API_KEY}",
@@ -68,7 +68,7 @@ def analyze_medical_report(text: str) -> Dict[str, Any]:
         """
 
         data = {
-            "model": "deepseek/deepseek-chat-v3.1",  # Updated model
+            "model": "deepseek/deepseek-chat-v3.1:free",  # Updated model
             "messages": [
                 {
                     "role": "system",
@@ -160,7 +160,7 @@ def summarize_text(text: str) -> str:
     Summarize a text using the OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
@@ -200,7 +200,7 @@ def ask_question(text: str, question: str) -> str:
     Ask a question about a text using the OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {

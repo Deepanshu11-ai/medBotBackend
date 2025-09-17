@@ -39,7 +39,7 @@ def get_medical_advice(summary: str, query: str) -> Dict[str, Any]:
         """
 
         data = {
-            "model": "deepseek/deepseek-chat-v3.1",  # Using faster Claude Instant model
+            "model": "deepseek/deepseek-chat-v3.1:free",  # Using faster Claude Instant model
             "messages": [
                 {"role": "system", "content": "You are a knowledgeable medical assistant providing accurate and helpful medical advice."},
                 {"role": "user", "content": prompt}

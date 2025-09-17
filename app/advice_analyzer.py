@@ -8,7 +8,10 @@ def get_medical_advice(summary: str, query: str) -> Dict[str, Any]:
     Get medical advice using OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY")
+        if not API_KEY:
+            raise ValueError("OPENROUTER_API_KEY environment variable is not set")
+            
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {

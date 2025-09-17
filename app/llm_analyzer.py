@@ -171,7 +171,7 @@ def summarize_text(text: str) -> str:
         }
 
         data = {
-            "model": "deepseek/deepseek-chat-v3.1",  # Updated model
+            "model": "deepseek/deepseek-chat-v3.1:free",  # Updated model
             "messages": [
                 {
                     "role": "system",

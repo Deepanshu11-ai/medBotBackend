@@ -8,11 +8,11 @@ python-docx==1.0.1
 python-dotenv==1.0.1
 aiofiles==23.2.1
 pydantic==2.8.2
-starlette==0.36.1
+starlette==0.35.1
 typing-extensions==4.15.0
 gunicorn==21.2.0
 httpx==0.26.0
-pandas==2.2.0
+pandas==2.2.2
 numpy==1.26.3
 chardet==5.2.0
 python-jose==3.3.0

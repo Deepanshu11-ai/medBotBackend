@@ -12,7 +12,7 @@ def get_medical_advice(summary: str, query: str) -> Dict[str, Any]:
         if not API_KEY:
             raise ValueError("OPENROUTER_API_KEY environment variable is not set")
             
-        API_URL = "https://openrouter.ai/api/v1"
+        API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
             "Authorization": f"Bearer {API_KEY}",

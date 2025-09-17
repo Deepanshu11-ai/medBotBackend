@@ -16,6 +16,8 @@ services:
         value: 1
       - key: PYTHONPATH
         value: .
+      - key: OPENROUTER_API_KEY
+        sync: false
     autoDeploy: true
     healthCheckPath: /health
     scaling:

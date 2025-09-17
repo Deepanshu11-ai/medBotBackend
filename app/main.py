@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from .advice_analyzer import get_medical_advice
+from .routes import router
 # Initialize global variables
 uploaded_text = ""  # Store full text from PDF/Word/TXT
 uploaded_summary = {  # Store structured summary with default empty values
@@ -51,6 +52,8 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc"
 )
+
+app.include_router(router)
 
 # CORS configuration for frontend
 from fastapi.middleware.cors import CORSMiddleware

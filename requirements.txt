@@ -1,41 +1,25 @@
-# Web Framework and Server
+# Core Dependencies
 fastapi==0.109.1
-uvicorn==0.27.1
-gunicorn==21.2.0
-starlette==0.36.1
-
-# File Handling and Parsing
+uvicorn[standard]==0.27.1
+pydantic==2.8.2
 python-multipart==0.0.6
-PyPDF2==3.0.1
-python-docx==1.0.1
-PyMuPDF==1.24.9
-aiofiles==23.2.1
-chardet==5.2.0
-
-# Data Processing and Analysis
-pandas==2.1.4
-numpy==1.24.3
-rapidfuzz==3.6.1
-
-# HTTP and API
-requests==2.31.0
-httpx==0.26.0
-
-# Templates and Frontend
-jinja2==3.1.3
-
-# Security and Authentication
-python-jose==3.3.0
-bcrypt==4.1.2
 python-dotenv==1.0.1
 
-# Type Hints and Validation
-pydantic==2.8.2
-typing-extensions==4.15.0
+# PDF and Document Processing
+PyPDF2==3.0.1
+PyMuPDF==1.24.9
 
-# Additional Libraries for Text Processing
-nltk==3.8.1
-scikit-learn==1.4.0
+# API and HTTP
+httpx==0.26.0
+
+# Template Engine
+jinja2==3.1.3
+
+# Text Processing
+rapidfuzz==3.6.1
 
 # OpenAI Integration
 openai==1.13.3
+
+# File Operations
+aiofiles==23.2.1

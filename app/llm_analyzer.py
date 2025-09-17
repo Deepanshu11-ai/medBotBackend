@@ -160,7 +160,7 @@ def summarize_text(text: str) -> str:
     Summarize a text using the OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
@@ -200,7 +200,7 @@ def ask_question(text: str, question: str) -> str:
     Ask a question about a text using the OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
@@ -212,7 +212,7 @@ def ask_question(text: str, question: str) -> str:
 
         prompt = f"Text:\n{text}\n\nQuestion: {question}"
         data = {
-            "model": "deepseek/deepseek-chat-v3.1",  # Updated model
+            "model": "deepseek/deepseek-chat-v3.1:free",  # Updated model
             "messages": [
                 {
                     "role": "system",

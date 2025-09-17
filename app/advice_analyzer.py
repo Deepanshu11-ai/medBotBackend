@@ -8,7 +8,7 @@ def get_medical_advice(summary: str, query: str) -> Dict[str, Any]:
     Get medical advice using OpenRouter API with Deepseek model
     """
     try:
-        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+        API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
         API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {

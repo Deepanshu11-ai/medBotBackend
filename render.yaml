@@ -17,7 +17,7 @@ services:
       - key: PYTHONPATH
         value: .
       - key: OPENROUTER_API_KEY
-        sync: false
+        value: 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
     autoDeploy: true
     healthCheckPath: /health
     scaling:

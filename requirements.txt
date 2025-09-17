@@ -17,3 +17,8 @@ numpy==1.26.3
 chardet==5.2.0
 python-jose==3.3.0
 bcrypt==4.1.2
+=======
+pydantic==2.8.2
+typing-extensions==4.15.0
+PyMuPDF==1.24.9   
+>>>>>>> 91b2e8ff492b99efea96e5133b4c7aace304451b

@@ -42,7 +42,7 @@ def analyze_medical_report(text: str) -> Dict[str, Any]:
     """
     try:
         API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
-        API_URL = "https://openrouter.ai/api/v1/chat/completions"
+        API_URL = "https://openrouter.ai/api/v1"
 
         headers = {
             "Authorization": f"Bearer {API_KEY}",
